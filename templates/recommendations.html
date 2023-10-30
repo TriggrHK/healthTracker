@@ -1,0 +1,115 @@
+{% extends 'base.html' %}
+{% comment %} 
+Authors: Trevor Heath, Olivia Morgan, Spencer Jacklin, Mitch McCoard
+Description: Recommendations html just has some links that users can access if they want to improve
+  their nutrition levels for things in the dashboard they see as problematic
+{% endcomment %}
+
+{% load static %}
+
+{% block navBar%}
+<li class="nav-item"><a href="{% url 'index' %}" class="nav-link">Home</a></li>
+<li class="nav-item"><a href="{% url 'journal' %}" class="nav-link" {% if session.isAuth is False %}hidden{% endif %}>Journal</a></li>
+<li class="nav-item"><a href="{% url 'stats' %}" class="nav-link" {% if session.isAuth is False %}hidden{% endif %}>Dashboard</a></li>
+<li class="nav-item active"><a href="{% url 'recommendation' %}" class="nav-link" {% if session.isAuth is False %}hidden{% endif %}>Recommendations</a></li>
+<li class="nav-item"><a href="{% url 'account' %}" class="nav-link" {% if session.isAuth is False %}hidden{% endif %}>Account</a></li>
+<li class="nav-item"><a href="{% url 'login' %}" class="nav-link"{% if session.isAuth is True %}hidden{% endif %}>Login/Create Account</a></li>
+<li class="nav-item"><a href="{% url 'logout' %}" class="nav-link"{% if session.isAuth is False %}hidden{% endif %}>Logout</a></li>
+{% endblock%}
+
+
+
+{% block content %}
+
+<section class="ftco-section bg-light">
+  <div class="container">
+    <div class="row justify-content-center pb-5 mb-3">
+      <div class="col-md-7 heading-section text-center ftco-animate">
+        <span class="subheading mb-3">Need recipes?</span>
+        <h2>Recommendations</h2>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-md-6 col-lg-3 ftco-animate">
+        <div class="block-7">
+          <div class="text-center">
+            <h4 class="heading-2" id="nutrientonelink"><b>Sodium</b></h4>
+
+            <ul class="pricing-text mb-5">
+              <li><span class="fa fa-check mr-2"></span>relaxes muscles</li>
+              <li><span class="fa fa-check mr-2"></span>maintains fluid balance</li>
+              <li><span class="fa fa-check mr-2"></span>controls blood pressure</li>
+
+            </ul>
+
+            <a href="https://www.davita.com/diet-nutrition/recipe-search?query=sodium"  target="_blank"  class="btn btn-primary px-4 py-3">Find Recipes</a>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-6 col-lg-3 ftco-animate">
+        <div class="block-7">
+          <div class="text-center">
+          <h4 class="heading-2" id="nutrienttwolink"><b>Protein</b></h4>
+          
+          <ul class="pricing-text mb-5">
+              <li><span class="fa fa-check mr-2"></span>repairs cells</li>
+              <li><span class="fa fa-check mr-2"></span>carries oxygen</li>
+              <li><span class="fa fa-check mr-2"></span>strengthens organs</li>
+
+            </ul>
+          <a href="https://www.davita.com/diet-nutrition/recipe-search?query=protein" target="_blank"  class="btn btn-primary px-4 py-3">Find recipes</a>
+
+        </div>
+        </div>
+      </div>
+      <div class="col-md-6 col-lg-3 ftco-animate">
+        <div class="block-7">
+          <div class="text-center">
+          <h4 class="heading-2" id="nutrientthreelink"><b>Water</b></h4>
+          
+          <ul class="pricing-text mb-5">
+              <li><span class="fa fa-check mr-2"></span>flushes out waste</li>
+              <li><span class="fa fa-check mr-2"></span>regulates temperature</li>
+              <li><span class="fa fa-check mr-2"></span>improves mood</li>
+            </ul>
+
+          <a href="https://www.davita.com/diet-nutrition/recipe-search?query=water" target="_blank"  class="btn btn-primary px-4 py-3">Find Recipes</a>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-6 col-lg-3 ftco-animate">
+        <div class="block-7">
+          <div class="text-center">
+          <h4 class="heading-2" id="nutrientfourlink"><b>Potassium</b></h4>
+
+          <ul class="pricing-text mb-5">
+              <li><span class="fa fa-check mr-2"></span>supports nerves</li>
+              <li><span class="fa fa-check mr-2"></span>lowers blood pressure</li>
+              <li><span class="fa fa-check mr-2"></span>maintains blood volume</li>
+            </ul>
+
+          <a href="https://www.davita.com/diet-nutrition/recipe-search?query=potassium" target="_blank" class="btn btn-primary px-4 py-3">Find Recipes</a>
+          </div>
+        </div>
+      </div>
+
+      
+      <div class="col-md-6 col-lg-3 ftco-animate">
+        <div class="block-7">
+          <div class="text-center">
+          <h4 class="heading-2" id="nutrientfivelink"><b>Phosphorus</b></h4>
+          
+          <ul class="pricing-text mb-5">
+              <li><span class="fa fa-check mr-2"></span>balances minerals</li>
+              <li><span class="fa fa-check mr-2"></span>strengthens bones</li>
+              <li><span class="fa fa-check mr-2"></span>increases energy</li>
+            </ul>
+
+          <a href="https://www.davita.com/diet-nutrition/recipe-search?query=phosphorus" target="_blank" class="btn btn-primary px-4 py-3">find recipes</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+{% endblock %}

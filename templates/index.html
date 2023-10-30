@@ -1,0 +1,329 @@
+{% extends 'base.html' %}
+{% comment %} 
+Authors: Trevor Heath, Olivia Morgan, Spencer Jacklin, Mitch McCoard
+Description: Index HTML has the home page for the website
+{% endcomment %}
+
+{% load static %}
+
+{% block navBar%}
+  <li class="nav-item active"><a href="{% url 'index' %}" class="nav-link">Home</a></li>
+  <li class="nav-item"><a href="{% url 'journal' %}" class="nav-link" {% if session.isAuth is False %}hidden{% endif %}>Journal</a></li>
+  <li class="nav-item"><a href="{% url 'stats' %}" class="nav-link" {% if session.isAuth is False %}hidden{% endif %}>Dashboard</a></li>
+    <li class="nav-item"><a href="{% url 'recommendation' %}" class="nav-link" {% if session.isAuth is False %}hidden{% endif %}>Recommendations</a></li>
+  <li class="nav-item"><a href="{% url 'account' %}" class="nav-link" {% if session.isAuth is False %}hidden{% endif %}>Account</a></li>
+  <li class="nav-item"><a href="{% url 'login' %}" class="nav-link"{% if session.isAuth is True %}hidden{% endif %}>Login/Create Account</a></li>
+  <li class="nav-item"><a href="{% url 'logout' %}" class="nav-link"{% if session.isAuth is False %}hidden{% endif %}>Logout</a></li>
+  {% endblock%}
+
+
+{% block content %}
+    <div class="hero-wrap js-fullheight">
+	    <div class="home-slider owl-carousel js-fullheight">
+	      <div class="slider-item js-fullheight" style="background-image:url('https://i.postimg.cc/d1ZBNcnt/bg-1.jpg');">
+			<div class="overlay"></div>
+	        <div class="container">
+	          <div class="row no-gutters slider-text align-items-center">
+		          <div class="col-md-7 ftco-animate">
+		          	<div class="text w-100">
+		          		<h2>welcome to revive</h2>
+			            <h1 class="mb-4">eat better, live better</h1>
+		            </div>
+		          </div>
+		        </div>
+	        </div>
+	      </div>
+
+	      <div class="slider-item js-fullheight" style="background-image:url('https://i.postimg.cc/MKd1BfG1/brooke-lark-08b-OYn-H-r-E-unsplash.jpg');">
+	      	<div class="overlay"></div>
+	        <div class="container">
+	          <div class="row no-gutters slider-text align-items-center justify-content-end">
+		          <div class="col-md-7 ftco-animate">
+		          	<div class="text w-100">
+                  <h2>A Fresh approach to healthy life</h2>
+			            <h1 class="mb-4">Unlock your potential with good nutrition</h1>
+		            </div>
+		          </div>
+		        </div>
+	        </div>
+	      </div>
+
+	      <div class="slider-item js-fullheight" style="background-image:url('https://i.postimg.cc/t4RzQxDc/bg-3.jpg');">
+	      	<div class="overlay"></div>
+	        <div class="container">
+	          <div class="row no-gutters slider-text align-items-center justify-content-end">
+		          <div class="col-md-6 ftco-animate">
+		          	<div class="text w-100">
+		          		<h2>revive refreshes</h2>
+			            <h1 class="mb-4">transform how you feel and what you do</h1>
+		            </div>
+		          </div>
+		        </div>
+	        </div>
+	      </div>
+	    </div>
+	  </div>
+		
+    <section class="ftco-section ftco-services">
+    	<div class="container">
+    		<div class="row">
+          <div class="col-md-4 d-flex services align-self-stretch px-4 ftco-animate">
+            <div class="d-block services-wrap text-center">
+              <div class="img" style="background-image: url('https://i.postimg.cc/mZqcCxf2/robina-weermeijer-sz-Kj-Hy-Pq28-unsplash.jpg');"></div>
+              <div class="media-body p-2 mt-3">
+                <h3 class="heading">90%</h3>
+                <p>of a person's kidney functions could be lost before symptoms appear</p>
+              </div>
+            </div>      
+          </div>
+          <div class="col-md-4 d-flex services align-self-stretch px-4 ftco-animate">
+            <div class="d-block services-wrap text-center">
+              <div class="img" style="background-image: url('https://i2.wp.com/blackmeninamerica.com/wp-content/uploads/2017/03/Black-Man-Eating.jpg?fit=503%2C432&ssl=1');"></div>
+              <div class="media-body p-2 mt-3">
+                <h3 class="heading">50%</h3>
+                <p>may have been able to prevent kidney failure through diet & lifestyle changes</p>
+              </div>
+            </div>    
+          </div>
+          <div class="col-md-4 d-flex services align-self-stretch px-4 ftco-animate">
+            <div class="d-block services-wrap text-center">
+              <div class="img" style="background-image: url('https://i.postimg.cc/JzXjGrsL/mykenzie-johnson-4qjx-CUOc3i-Q-unsplash.jpg');"></div>
+              <div class="media-body p-2 mt-3">
+                <h3 class="heading">33%</h3>
+                <p>of the population is considered at high risk for kidney disease</p>
+              </div>
+            </div>      
+          </div>
+        </div>
+    	</div>
+    </section>
+
+	<section class="ftco-section ftco-counter" id="section-counter">
+    	<div class="container">
+				<div class="row">
+          <div class="col-md-6 col-lg-3 d-flex justify-content-center counter-wrap ftco-animate">
+            <div class="block-18 text-center">
+              <div class="text">
+                <strong class="number" data-number="13">0</strong>
+              </div>
+              <div class="text">
+              	<span>Years of Experience</span>
+              </div>
+            </div>
+          </div>
+          <div class="col-md-6 col-lg-3 d-flex justify-content-center counter-wrap ftco-animate">
+            <div class="block-18 text-center">
+              <div class="text">
+                <strong class="number" data-number="1250">0</strong>
+              </div>
+              <div class="text">
+              	<span>Users with improved Quality of Life</span>
+              </div>
+            </div>
+          </div>
+          <div class="col-md-6 col-lg-3 d-flex justify-content-center counter-wrap ftco-animate">
+            <div class="block-18 text-center">
+              <div class="text">
+                <strong class="number" data-number="110">0</strong>
+              </div>
+              <div class="text">
+              	<span>Employees Dedicated to Helping You</span>
+              </div>
+            </div>
+          </div>
+          <div class="col-md-6 col-lg-3 d-flex justify-content-center counter-wrap ftco-animate">
+            <div class="block-18 text-center">
+              <div class="text">
+                <strong class="number" data-number="250">0</strong>
+              </div>
+              <div class="text">
+              	<span>Pineapples Consumed By Our Users</span>
+              </div>
+            </div>
+          </div>
+        </div>
+    	</div>
+    </section>
+		
+    <section class="ftco-section ftco-no-pt ftco-no-pb bg-light">
+			<div class="container">
+				<div class="row no-gutters">
+					<div class="col-md-5 p-md-5 img img-2 mt-5 mt-md-0" style="background-image: url('https://i.postimg.cc/6pv0sLwt/k8-q-WQEeqr-Esmw-unsplash.jpg');">
+					</div>
+					<div class="col-md-7 wrap-about py-4 py-md-5 ftco-animate">
+	          <div class="heading-section mb-5">
+	          	<div class="pl-md-5">
+		          	<span class="subheading mb-2">Welcome to revive</span>
+		            <h2 class="mb-2">Nutrition is a natural way of improving your full body health</h2>
+	            </div>
+	          </div>
+	          <div class="pl-md-5">
+							<p>Poor health can control your life. Although modern medicine is an incredible help, medical professionals are not available, and especially in the kidney industry, many nutritionists have a backlog of patients to see. Because those with kidney damage have a limited amount of time to respond to health concerns, we created Revive.</p>
+							<p>Revive is a website that provides you with AI food recommendations catered towards your dietary needs. Whether you are in between appointments or just trying to have nutritional autonomy, Revive has you in mind.</p>
+					</div>
+				</div>
+			</div>
+		</section>
+
+
+    <section class="ftco-section testimony-section bg-light">
+      <div class="container">
+        <div class="row justify-content-center pb-5 mb-3">
+          <div class="col-md-7 heading-section text-center ftco-animate">
+          	<span class="subheading mb-3">Testimonials</span>
+            <h2>Happy Clients &amp; Feedbacks</h2>
+          </div>
+        </div>
+        <div class="row ftco-animate">
+          <div class="col-md-12">
+            <div class="carousel-testimony owl-carousel">
+							<div class="item">
+                <div class="testimony-wrap d-flex">
+                  <div class="user-img" style="background-image: url('https://i.postimg.cc/ZqcmYmHY/joseph-gonzalez-NCR1-FHsrl3-U-unsplash.jpg')">
+                  </div>
+                  <div class="text pl-4">
+                  	<span class="quote d-flex align-items-center justify-content-center">
+                      <i class="fa fa-quote-left"></i>
+                    </span>
+                    <p>Revive has helped me given me back my energy and my family. I used to have to take multiple naps a day but now I can make it to all my kids events!</p>
+                    <p class="name">Joseph Gonzalez</p>
+                    <span class="position">Father</span>
+                  </div>
+                </div>
+              </div>
+              <div class="item">
+                <div class="testimony-wrap d-flex">
+                  <div class="user-img" style="background-image: url('https://i.postimg.cc/9Mswby7n/joshua-rawson-harris-1-YH0mu5-Pcgs-unsplash.jpg')">
+                  </div>
+                  <div class="text pl-4">
+                  	<span class="quote d-flex align-items-center justify-content-center">
+                      <i class="fa fa-quote-left"></i>
+                    </span>
+                    <p>Knowing that the food I put into my body is nutritious for my current and future health goals helps me stay strong and ready for long days on my feet.</p>
+                    <p class="name">Kaylia Brown</p>
+                    <span class="position">Photographer</span>
+                  </div>
+                </div>
+              </div>
+              <div class="item">
+                <div class="testimony-wrap d-flex">
+                  <div class="user-img" style="background-image: url('https://i.postimg.cc/G3zjF57B/kylie-de-guia-Cx-Odk-AZeo-Og-unsplash.jpg')">
+                  </div>
+                  <div class="text pl-4">
+                  	<span class="quote d-flex align-items-center justify-content-center">
+                      <i class="fa fa-quote-left"></i>
+                    </span>
+                    <p>This website makes knowing what to pack for lunch super easy. We were just googling everything before.</p>
+                    <p class="name">Raja Ali</p>
+                    <span class="position">6th grader</span>
+                  </div>
+                </div>
+              </div>
+              <div class="item">
+                <div class="testimony-wrap d-flex">
+                  <div class="user-img" style="background-image: url('https://i.postimg.cc/bv3rvW9P/eric-ardito-PBaxe1e-Lw-K4-unsplash.jpg')">
+                  </div>
+                  <div class="text pl-4">
+                  	<span class="quote d-flex align-items-center justify-content-center">
+                      <i class="fa fa-quote-left"></i>
+                    </span>
+                    <p>The amount of resources on the internet make it so hard to find good information. Putting everything in one reliable spot is a game changer. </p>
+                    <p class="name">Mark Huff</p>
+                    <span class="position">Realtor</span>
+                  </div>
+                </div>
+              </div>
+              <div class="item">
+                <div class="testimony-wrap d-flex">
+                  <div class="user-img" style="background-image: url('https://i.postimg.cc/qMVpG1NT/junior-reis-sx1x4l-XBrqc-unsplash.jpg')">
+                  </div>
+                  <div class="text pl-4">
+                  	<span class="quote d-flex align-items-center justify-content-center">
+                      <i class="fa fa-quote-left"></i>
+                    </span>
+                    <p>Having diabetes, I always expected nutrition plans to feel restricting but Revive shows me so many different food and recipe options for my situation.</p>
+                    <p class="name">Kendra Bosh</p>
+                    <span class="position">Businesswoman</span>
+                  </div>
+                </div>
+              </div>
+						</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+		<section class="ftco-intro" style="background-image: url('https://i.postimg.cc/d1ZBNcnt/bg-1.jpg');" data-stellar-background-ratio="0.5">
+			<div class="overlay"></div>
+			<div class="container">
+				<div class="row">
+					<div class="col-md-9">
+						<h2>Build your healthy future today</h2>
+						<p class="mb-0">Your health is our top priority, no waiting required.</p>
+						<p></p>
+					</div>
+					<div class="col-md-3 d-flex align-items-center">
+						<p class="mb-0"><a href="{% url 'login' %}" class="btn btn-white px-4 py-3" {% if session.isAuth is True %}hidden{% endif %}>Create a free account</a></p>
+					</div>
+				</div>
+			</div>
+		</section>
+
+    <section class="ftco-section">
+    	<div class="container">
+    		<div class="row justify-content-center pb-5 mb-3">
+          <div class="col-md-7 heading-section text-center ftco-animate">
+            <h2>How it works?</h2>
+          </div>
+        </div>
+    		<div class="row">
+          <div class="col-md-3 d-flex services align-self-stretch px-4 ftco-animate">
+            <div class="d-block text-center">
+              <div class="icon d-flex justify-content-center align-items-center">
+                <img src="https://i.postimg.cc/FzLff17X/hand-cursor-png-click-cursor-hand-icon-13.png" style="width: 40%">
+              </div>
+              <div class="media-body p-2 mt-3">
+                <h3 class="heading">Sign up</h3>
+                <p>Creating an account takes just a few short minutes. We collect information about your health to provide the best artifical intelligence recommendations catered towards your needs.</p>
+              </div>
+            </div>      
+          </div>
+          <div class="col-md-3 d-flex services align-self-stretch px-4 ftco-animate">
+            <div class="d-block text-center">
+              <div class="icon d-flex justify-content-center align-items-center">
+            		<img src="https://i.postimg.cc/t4S67s57/journal.png" style="width: 50%">
+              </div>
+              <div class="media-body p-2 mt-3">
+                <h3 class="heading">Log meals</h3>
+                <p>Writing down your daily meal intake keeps you and your nutritionist aware of what specific foods, times, or serving sizes may be imbalancing your nutritional health.</p>
+              </div>
+            </div>    
+          </div>
+          <div class="col-md-3 d-flex services align-self-stretch px-4 ftco-animate">
+            <div class="d-block text-center">
+              <div class="icon d-flex justify-content-center align-items-center">
+                <img src="https://i.postimg.cc/yNywFzDJ/image-processing20210616-28547-1xvy3ds.png" style="width:60%">
+              </div>
+              <div class="media-body p-2 mt-3">
+                <h3 class="heading">Observe dashboards</h3>
+                <p>Our sophiscated software calculates from your meals what nutrients you are within your recommended personal range for and which nutrients can use some improving on.</p>
+              </div>
+            </div>
+          </div>
+          <div class="col-md-3 d-flex services align-self-stretch px-4 ftco-animate">
+            <div class="d-block text-center">
+              <div class="icon d-flex justify-content-center align-items-center">
+                <img src="https://i.postimg.cc/bw9hRnMN/adventure.png" style="width: 80%">
+              </div>
+              <div class="media-body p-2 mt-3">
+                <h3 class="heading">Choose your adventure</h3>
+                <p>Using food suggestions specifically for your individual needs, find what you like best! Our recommendations update in real time as you update your meal journal. </p>
+              </div>
+            </div>      
+          </div>
+        </div>
+    	</div>
+    </section>
+
+
+{% endblock %}

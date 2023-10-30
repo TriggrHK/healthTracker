@@ -1,0 +1,1 @@
+This was my team intex project for fall 2022. We had 4 days to create a webpage for the Kidney Foundation that could be used by their customers to login, track their foods/nutrients, and recommend recipes based on needs. This application was done in Python Django

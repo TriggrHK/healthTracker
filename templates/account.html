@@ -1,0 +1,230 @@
+{% extends 'base.html' %}
+{% comment %} 
+Authors: Trevor Heath, Olivia Morgan, Spencer Jacklin, Mitch McCoard
+Description: Accounts display the users data imported on account creation
+    also implements CRUD for the allergies and morbidities since they aren't asked about when
+    the account it created
+{% endcomment %}
+{% load static %}
+
+{% block navBar%}
+<li class="nav-item"><a href="{% url 'index' %}" class="nav-link">Home</a></li>
+<li class="nav-item"><a href="{% url 'journal' %}" class="nav-link" {% if session.isAuth is False %}hidden{% endif %}>Journal</a></li>
+<li class="nav-item"><a href="{% url 'stats' %}" class="nav-link" {% if session.isAuth is False %}hidden{% endif %}>Dashboard</a></li>
+<li class="nav-item"><a href="{% url 'recommendation' %}" class="nav-link" {% if session.isAuth is False %}hidden{% endif %}>Recommendations</a></li>
+<li class="nav-item active"><a href="{% url 'account' %}" class="nav-link" {% if session.isAuth is False %}hidden{% endif %}>Account</a></li>
+<li class="nav-item"><a href="{% url 'login' %}" class="nav-link"{% if session.isAuth is True %}hidden{% endif %}>Login/Create Account</a></li>
+<li class="nav-item"><a href="{% url 'logout' %}" class="nav-link"{% if session.isAuth is False %}hidden{% endif %}>Logout</a></li>
+{% endblock%}
+
+{% block content %}
+<section class="ftco-section bg-light">
+  <div class="container">
+<div class="row justify-content-center">
+            
+  <div class="col-md-12">
+      <div class="wrapper">
+          <div class="row no-gutters">
+              <div class="col-lg-8 col-md-7 order-md-last d-flex align-items-stretch">
+                  <div class="contact-wrap w-100 p-md-5 p-4">
+                      <h3 class="mb-4">Your Account Information</h3>
+<form method="POST" id="createForm" name="contactForm" class="contactForm" action='/login/createAccount'>
+  {% csrf_token %}
+    <div class="row">
+        <div class="col-md-6">
+            <div class="form-group">
+                <label class="label" for="firstName">First Name: {{user.f_name}}</label><p></p>
+            </div>
+        </div>
+        <div class="col-md-6"> 
+            <div class="form-group">
+                <label class="label" for="middleName">Middle Name: {{user.m_name}}</label>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="form-group">
+                <label class="label" for="lastName">Last Name: {{user.l_name}}</label>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="form-group">
+                <label class="label" for="phone">Phone: {{user.phone}}</label>
+            </div>
+        </div>
+        <div class="col-md-6">
+          <div class="form-group">
+              <label class="label" for="email">Email: {{user.email}}</label>
+          </div>
+      </div>
+      <div class="col-md-6">
+          <div class="form-group">
+              <label class="label" for="dob">Date of Birth: {{user.date_of_birth}}</label>
+          </div>
+      </div>
+      
+        <div class="col-md-6">
+          <div class="form-group">
+              <label class="label">Gender: {{user.gender.gender}}</label><br/>
+          </div>
+      </div>
+      <div class="col-md-6"> 
+          <div class="form-group">
+              <label class="label" for="email">Address: {{user.street_address}}</label>
+          </div>
+      </div>
+      <div class="col-md-6">
+          <div class="form-group">
+              <label class="label" for="township">City: {{user.city}}</label>
+          </div>
+      </div>
+      <div class="col-md-6">
+          <div class="form-group">
+              <label class="label" for="state">State: {{user.state}}</label>
+          </div>
+      </div>
+      <div class="col-md-6"> 
+          <div class="form-group">
+              <label class="label" for="zip">Zip: {{user.zip}}</label>
+          </div>
+      </div>
+      <div class="col-md-6">
+          <div class="form-group">
+              <label class="label" for="County">County: {{user.county}}</label>
+          </div>
+      </div>
+      <div class="col-md-6">
+          <div class="form-group">
+              <label class="label" for="username">Username: {{user.username}}</label>
+          </div>
+      </div>
+      <div class="col-md-6">
+          <div class="form-group">
+              <label class="label" for="current_stage">Current Stage (1-5): {{user.current_stage.current_stage}}</label>
+          </div>
+      </div>
+      <div class="col-md-6">
+          <div class="form-group">
+              <label class="label" for="current_height">Current Height (cm): {{user.current_height}}</label>
+          </div>
+      </div>
+      <div class="col-md-6">
+          <div class="form-group">
+              <label class="label" for="current_weight">Current Weight (kg): {{user.current_weight}}</label>
+          </div>
+      </div>
+      <div class="col-md-6">
+          <div class="form-group">
+              <label class="label" for="race">Race: {{user.race}}</label>
+          </div>
+      </div>
+    </div>
+  </form>
+  
+
+      <div class="col-md-12">
+        <div class="form-group">
+          <label class="label" for="comorbidity">Comorbidities:</label>
+
+          {% for el in comoUsers %}
+            <div class="row">
+            <label class='label' style="padding-top: 7px;">{{el.comorbidities_id.risk_name}}, {{el.comorbidities_id.description}}</label>
+            &nbsp;&nbsp;&nbsp;
+            <form method="POST" class="hiddenForm" id="editComo{{el.comorbidities_id.comorbidities_id}}" name="editComoForm" action='/editComo'>
+              {% csrf_token %}
+              <input type="text" name="risk_name" class="form-control" id="risk_name" placeholder="Enter Edited Comorbidity" value="{{el.comorbidities_id.risk_name}}" required></input>
+              <input type="text" name="description" class="form-control" id="description" placeholder="Enter Edited Description" value="{{el.comorbidities_id.description}}" required></input>
+              <input type="hidden" name="comorbidities_id" class="form-control" id="comorbidities_id" value="{{el.comorbidities_id.comorbidities_id}}" required></input>
+              <input type="submit" value="Submit" class="btn btn-primary" onclick="toggleEdit('editComo{{el.comorbidities_id.comorbidities_id}}', 'editButComo{{el.comorbidities_id.comorbidities_id}}')"></input>
+            </form>
+
+            <input type="button" class="btn" id="editButComo{{el.comorbidities_id.comorbidities_id}}" onclick="toggleVis('editComo{{el.comorbidities_id.comorbidities_id}}', 'editButComo{{el.comorbidities_id.comorbidities_id}}')" value="Edit"></input>
+            &nbsp;&nbsp;&nbsp;
+            <form method="POST" id="delComoForm" name="delComoForm" action='/deleteComo'>
+              {% csrf_token %}
+              <input type="hidden" name="comorbidities_id" class="form-control" id="comorbidities_id" value={{el.comorbidities_id.comorbidities_id}}></input>
+              <input type="submit" value="Delete" class="btn"></input>
+            </form>
+          </div>
+
+          {% endfor %}
+
+
+          <br/>
+
+          <input type="button" class="btn btn-primary" id="addButComo{{el.comorbidities_id.comorbidities_id}}" onclick="toggleVis('addComo{{el.comorbidities_id.comorbidities_id}}', 'addButComo{{el.comorbidities_id.comorbidities_id}}')" value="Add Comorbidity"></input>
+
+          <form method="POST" class="hiddenForm" id="addComo{{el.comorbidities_id.comorbidities_id}}" name="addComoForm" action='/addComo'>
+            {% csrf_token %}
+            <input type="text" name="risk_name" class="form-control" id="risk_name" placeholder="Enter Comorbidity" required></input>
+            <input type="text" name="description" class="form-control" id="description" placeholder="Enter Description" required></input>
+            <input type="submit" value="Submit" class="btn btn-primary" onclick="toggleVis('addComo{{el.comorbidities_id.description}}', 'addButComo{{el.comorbidities_id.description}}')"></input>
+          </form>
+
+        </div>
+    </div>
+
+
+    <div class="col-md-12">
+        <div class="form-group">
+          <label class="label" for="allergy">Allergies:</label>
+
+
+          {% for el in allergyUsers %}
+            <div class="row">
+            <label class='label' style="padding-top: 7px;">{{el.allergies_id.allergy_name}}, {{el.allergies_id.severity}}</label>
+            &nbsp;&nbsp;&nbsp;
+            <form method="POST" class="hiddenForm contactForm" id="editAlg{{el.allergies_id.allergies_id}}" name="editAllergyForm" action='/editAllergy'>
+              {% csrf_token %}
+              <input type="text" name="allergy_name" class="form-control" id="allergy_name" placeholder="Enter Edited Allergy" value="{{el.allergies_id.allergy_name}}"></input>
+              <input type="text" name="severity" class="form-control" id="severity" placeholder="Enter Edited Severity" value="{{el.allergies_id.severity}}"></input>
+              <input type="hidden" name="allergies_id" class="form-control" id="allergies_id" value="{{el.allergies_id.allergies_id}}"></input>
+              <input type="submit" value="Submit" class="btn btn-primary" onclick="toggleEdit('editAlg{{el.allergies_id.allergies_id}}', 'editButAlg{{el.allergies_id.allergies_id}}')"></input>
+            </form>
+
+            <input type="button" class="btn" id="editButAlg{{el.allergies_id.allergies_id}}" onclick="toggleVis('editAlg{{el.allergies_id.allergies_id}}', 'editButAlg{{el.allergies_id.allergies_id}}')" value="Edit"></input>
+            &nbsp;&nbsp;&nbsp;
+            <form method="POST" id="delAllergyForm" name="delAllergyForm" action='/deleteAllergy'>
+              {% csrf_token %}
+              <input type="hidden" name="allergies_id" class="form-control" id="allergies_id" value="{{el.allergies_id.allergies_id}}"></input>
+              <input type="submit" value="Delete" class="btn"></input>
+            </form>
+          </div>
+          {% endfor %}
+
+          <br/>
+
+          <input type="button" class="btn btn-primary" id="addButAlg{{el.allergies_id.allergies_id}}" onclick="toggleVis('addAlg{{el.allergies_id.allergies_id}}', 'addButAlg{{el.allergies_id.allergies_id}}')" value="Add Allergy"></input>
+
+          <form method="POST" class="hiddenForm" id="addAlg{{el.allergies_id.allergies_id}}" name="addAllergyForm" action='/addAllergy'>
+            {% csrf_token %}
+            <input type="text" name="allergy_name" class="form-control" id="allergy_name" placeholder="Enter Allergy"></input>
+            <input type="text" name="severity" class="form-control" id="severity" placeholder="Enter Severity"></input>
+            <input type="submit" value="Submit" class="btn btn-primary" onclick="toggleVis('addAlg{{el.allergies_id.allergies_id}}', 'addButAlg{{el.allergies_id.allergies_id}}')"></input>
+          </form>
+        </div>
+    </div>
+
+    <script>
+      function toggleVis(formId, butId) {
+        console.log(formId, butId)
+        document.getElementById(formId).classList.toggle("hiddenForm")
+        if (document.getElementById(butId).style.display != "none") {
+          document.getElementById(butId).style.display = "none"
+        } else {
+          document.getElementById(butId).style.display = "inherit"
+        }
+      }
+    </script>
+
+        <div class="form-group">
+            <label class="label" for="question">If you would like to change any listed information please contact pineapple@revive.com</label>
+        </div>
+
+      </div>
+    </div>
+    </div>
+    </div>
+    </div>
+
+</section>
+{% endblock %}

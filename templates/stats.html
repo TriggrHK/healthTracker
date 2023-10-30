@@ -1,0 +1,403 @@
+{% extends 'base.html' %}
+{% comment %} 
+Authors: Trevor Heath, Olivia Morgan, Spencer Jacklin, Mitch McCoard
+Description: Stats page is visualizations based on users inputted journal_entries and food,
+ if no data is added then re-routes to home page(that functionality in routes)
+{% endcomment %}
+
+{% load static %}
+
+{% block navBar%}
+<li class="nav-item"><a href="{% url 'index' %}" class="nav-link">Home</a></li>
+<li class="nav-item"><a href="{% url 'journal' %}" class="nav-link" {% if session.isAuth is False %}hidden{% endif %}>Journal</a></li>
+<li class="nav-item active"><a href="{% url 'stats' %}" class="nav-link" {% if session.isAuth is False %}hidden{% endif %}>Dashboard</a></li>
+<li class="nav-item"><a href="{% url 'recommendation' %}" class="nav-link" {% if session.isAuth is False %}hidden{% endif %}>Recommendations</a></li>
+<li class="nav-item"><a href="{% url 'account' %}" class="nav-link" {% if session.isAuth is False %}hidden{% endif %}>Account</a></li>
+<li class="nav-item"><a href="{% url 'login' %}" class="nav-link"{% if session.isAuth is True %}hidden{% endif %}>Login/Create Account</a></li>
+<li class="nav-item"><a href="{% url 'logout' %}" class="nav-link"{% if session.isAuth is False %}hidden{% endif %}>Logout</a></li>
+{% endblock%}
+
+
+
+{% block content %}
+    <section class="ftco-section bg-light">
+    	<div class="container">
+    		<div class="row justify-content-center pb-5 mb-3">
+          <div class="col-md-7 heading-section text-center ftco-animate">
+          	<span class="subheading mb-3">Welcome {{user.username}}</span>
+            <h2>Let's track your progress</h2>
+          </div>
+        </div>
+		<div class="row justify-content-center">
+			<div class="col-9 ftco-animate">
+
+		  <div class="block-7">
+			<div class="text-center">
+				<h4 class="heading-2">Todays Nutrient Intake</h4>
+				
+				
+					<div class = "" > 
+						<canvas id="myChart" width="400" height="300"></canvas>
+							<script>
+							const ctx = document.getElementById('myChart').getContext('2d');
+							const myChart = new Chart(ctx, {
+								type: 'bar',
+								data: {
+									labels: [{% for key in recentDay %} '{{key}}', {% endfor %}],
+									datasets: [{
+										label: 'User Nutrient Levels on {{recentKey}}',
+										data: [{% for value in recentVals %}{{value}},{% endfor %}],
+										backgroundColor: [
+											'rgba(255, 99, 132, 0.8)',
+											'rgba(54, 162, 235, 0.8)',
+											'rgba(255, 206, 86, 0.8)',
+											'rgba(75, 192, 192, 0.8)',
+											'rgba(153, 102, 255, 0.8)',
+											'rgba(255, 159, 64, 0.8)'
+										],
+										borderColor: [
+											'rgba(255, 99, 132, 1)',
+											'rgba(54, 162, 235, 1)',
+											'rgba(255, 206, 86, 1)',
+											'rgba(75, 192, 192, 1)',
+											'rgba(153, 102, 255, 1)',
+											'rgba(255, 159, 64, 1)'
+										],
+										borderWidth: 1
+									}]
+								},
+								options: {
+									scales: {
+										y: {
+											beginAtZero: true
+										}
+									}
+								}
+							});
+							</script>
+					</div>
+
+				<a href="#" class="btn btn-primary px-4 py-3" onclick="print()">Print</a>
+			</div>
+		  </div>
+		</div>
+		<!-- {% for el in listDay %}
+			<span style="font-size: 150%"><span id="viewPhos" style="cursor: pointer; text-decoration: underline;" onclick="phosClick()" >View {{el}}</span> |
+		{% endfor %} -->
+
+		<span style="font-size: 150%"><span id="viewPhos" style="cursor: pointer; text-decoration: underline;" onclick="phosClick()" >View Phosphorus</span> | <span id="viewSodium" style="cursor: pointer; text-decoration: none;" onclick="sodiumClick()">View Sodium</span> | <span id="viewProtein" style="cursor: pointer; text-decoration: ;" onclick="proteinClick()" >View Protein</span> | <span id="viewWater" style="cursor: pointer; text-decoration: ;" onclick="waterClick()" >View Water</span> | <span id="viewK" style="cursor: pointer; text-decoration: ;" onclick="kClick()" >View K</span></span>
+		<div class="row justify-content-center" style="width:100%;">
+			<div class="col-9 ftco-animate">
+
+		  <div class="block-7">
+			<div id = 'PhosDiv' class="text-center">
+				<h4 class="heading-2">Key Daily Takeaways</h4>
+				<h1><span class="excerpt d-block">Phosphorus Intake</span></h1>
+				<span class="price">Over Time</span>
+					<div>
+						<canvas id="PhosLineChart" width="400" height="300"></canvas>
+							<script>
+							const ctx2 = document.getElementById('PhosLineChart').getContext('2d');
+							const PhosLineChart = new Chart(ctx2, {
+								type: 'line',
+								data: {
+									labels: [{% for day in keys %} '{{day}}', {% endfor %}],
+									datasets: [{
+										label: 'Amount of Phosphorus By Day',
+										data: [{% for el in listDay %}{{el.Phosphorus}},{% endfor %}],
+										backgroundColor: [
+											'rgba(255, 99, 132, 0.8)',
+											'rgba(54, 162, 235, 0.8)',
+											'rgba(255, 206, 86, 0.8)',
+											'rgba(75, 192, 192, 0.8)',
+											'rgba(153, 102, 255, 0.8)',
+											'rgba(255, 159, 64, 0.8)'
+										],
+										borderColor: [
+											'rgba(255, 99, 132, 1)',
+											'rgba(54, 162, 235, 1)',
+											'rgba(255, 206, 86, 1)',
+											'rgba(75, 192, 192, 1)',
+											'rgba(153, 102, 255, 1)',
+											'rgba(255, 159, 64, 1)'
+										],
+										borderWidth: 1
+									}]
+								},
+								options: {
+									scales: {
+										y: {
+											beginAtZero: true
+										}
+									}
+								}
+							});
+							</script>
+					</div><!--close nameless div-->
+				</div><!--close Phos div-->
+				<div id = 'SodiumDiv' class="text-center hiddenForm">
+					<h4 class="heading-2">Key Daily Takeaways</h4>
+					<h1><span class="excerpt d-block">Sodium Intake</span></h1>
+					<span class="price">Over Time</span>
+						<div >
+							<canvas id="SodiumLineChart" width="400" height="300"></canvas>
+							<script>
+							const ctx3 = document.getElementById('SodiumLineChart').getContext('2d');
+							const SodiumLineChart = new Chart(ctx3, {
+								type: 'line',
+								data: {
+									labels: [{% for day in keys %} '{{day}}', {% endfor %}],
+									datasets: [{
+										label: 'Amount of Sodium By Day',
+										data: [{% for el in listDay %}{{el.Sodium}},{% endfor %}],
+										backgroundColor: [
+											'rgba(255, 99, 132, 0.8)',
+											'rgba(54, 162, 235, 0.8)',
+											'rgba(255, 206, 86, 0.8)',
+											'rgba(75, 192, 192, 0.8)',
+											'rgba(153, 102, 255, 0.8)',
+											'rgba(255, 159, 64, 0.8)'
+										],
+										borderColor: [
+											'rgba(255, 99, 132, 1)',
+											'rgba(54, 162, 235, 1)',
+											'rgba(255, 206, 86, 1)',
+											'rgba(75, 192, 192, 1)',
+											'rgba(153, 102, 255, 1)',
+											'rgba(255, 159, 64, 1)'
+										],
+										borderWidth: 1
+									}]
+								},
+								options: {
+									scales: {
+										y: {
+											beginAtZero: true
+										}
+									}
+								}
+							});
+							</script>
+						</div><!--close nameless div-->
+					<a href="#" class="btn btn-primary px-4 py-3" onclick="print()">Print</a>
+					</div><!--close sodium div-->
+					<div id = 'ProteinDiv' class="text-center hiddenForm">
+						<h4 class="heading-2">Key Daily Takeaways</h4>
+						<h1><span class="excerpt d-block">Protein Intake</span></h1>
+						<span class="price">Over Time</span>
+							<div >
+								<canvas id="ProteinLineChart" width="400" height="300"></canvas>
+								<script>
+								const ctx4 = document.getElementById('ProteinLineChart').getContext('2d');
+								const ProteinLineChart = new Chart(ctx4, {
+									type: 'line',
+									data: {
+										labels: [{% for day in keys %} '{{day}}', {% endfor %}],
+										datasets: [{
+											label: 'Amount of Protein By Day',
+											data: [{% for el in listDay %}{{el.Protein}},{% endfor %}],
+											backgroundColor: [
+												'rgba(255, 99, 132, 0.8)',
+												'rgba(54, 162, 235, 0.8)',
+												'rgba(255, 206, 86, 0.8)',
+												'rgba(75, 192, 192, 0.8)',
+												'rgba(153, 102, 255, 0.8)',
+												'rgba(255, 159, 64, 0.8)'
+											],
+											borderColor: [
+												'rgba(255, 99, 132, 1)',
+												'rgba(54, 162, 235, 1)',
+												'rgba(255, 206, 86, 1)',
+												'rgba(75, 192, 192, 1)',
+												'rgba(153, 102, 255, 1)',
+												'rgba(255, 159, 64, 1)'
+											],
+											borderWidth: 1
+										}]
+									},
+									options: {
+										scales: {
+											y: {
+												beginAtZero: true
+											}
+										}
+									}
+								});
+								</script>
+							</div><!--close nameless div-->
+						<a href="#" class="btn btn-primary px-4 py-3" onclick="print()">Print</a>
+					</div><!--close Protein div-->
+					<div id = 'WaterDiv' class="text-center hiddenForm">
+						<h4 class="heading-2">Key Daily Takeaways</h4>
+						<h1><span class="excerpt d-block">Water Intake</span></h1>
+						<span class="price">Over Time</span>
+							<div >
+								<canvas id="WaterLineChart" width="400" height="300"></canvas>
+								<script>
+								const ctx5 = document.getElementById('WaterLineChart').getContext('2d');
+								const WaterLineChart = new Chart(ctx5, {
+									type: 'line',
+									data: {
+										labels: [{% for day in keys %} '{{day}}', {% endfor %}],
+										datasets: [{
+											label: 'Amount of Water By Day',
+											data: [{% for el in listDay %}{{el.Water}},{% endfor %}],
+											backgroundColor: [
+												'rgba(255, 99, 132, 0.8)',
+												'rgba(54, 162, 235, 0.8)',
+												'rgba(255, 206, 86, 0.8)',
+												'rgba(75, 192, 192, 0.8)',
+												'rgba(153, 102, 255, 0.8)',
+												'rgba(255, 159, 64, 0.8)'
+											],
+											borderColor: [
+												'rgba(255, 99, 132, 1)',
+												'rgba(54, 162, 235, 1)',
+												'rgba(255, 206, 86, 1)',
+												'rgba(75, 192, 192, 1)',
+												'rgba(153, 102, 255, 1)',
+												'rgba(255, 159, 64, 1)'
+											],
+											borderWidth: 1
+										}]
+									},
+									options: {
+										scales: {
+											y: {
+												beginAtZero: true
+											}
+										}
+									}
+								});
+								</script>
+							</div><!--close nameless div-->
+						<a href="#" class="btn btn-primary px-4 py-3" onclick="print()">Print</a>
+					</div><!--close Water div-->
+					<div id = 'KDiv' class="text-center hiddenForm">
+						<h4 class="heading-2">Key Daily Takeaways</h4>
+						<h1><span class="excerpt d-block">Potassium Intake</span></h1>
+						<span class="price">Over Time</span>
+							<div >
+								<canvas id="KLineChart" width="400" height="300"></canvas>
+								<script>
+								const ctx6 = document.getElementById('KLineChart').getContext('2d');
+								const KLineChart = new Chart(ctx6, {
+									type: 'line',
+									data: {
+										labels: [{% for day in keys %} '{{day}}', {% endfor %}],
+										datasets: [{
+											label: 'Amount of Potassium By Day',
+											data: [{% for el in listDay %}{{el.Potassium}},{% endfor %}],
+											backgroundColor: [
+												'rgba(255, 99, 132, 0.8)',
+												'rgba(54, 162, 235, 0.8)',
+												'rgba(255, 206, 86, 0.8)',
+												'rgba(75, 192, 192, 0.8)',
+												'rgba(153, 102, 255, 0.8)',
+												'rgba(255, 159, 64, 0.8)'
+											],
+											borderColor: [
+												'rgba(255, 99, 132, 1)',
+												'rgba(54, 162, 235, 1)',
+												'rgba(255, 206, 86, 1)',
+												'rgba(75, 192, 192, 1)',
+												'rgba(153, 102, 255, 1)',
+												'rgba(255, 159, 64, 1)'
+											],
+											borderWidth: 1
+										}]
+									},
+									options: {
+										scales: {
+											y: {
+												beginAtZero: true
+											}
+										}
+									}
+								});
+								</script>
+							</div><!--close nameless div-->
+						<a href="#" class="btn btn-primary px-4 py-3" onclick="print()">Print</a>
+					</div><!--close K div-->
+			</div><!--close class block-7 -->
+		</div><!--close col-9 animate-->
+	      </div>
+    	</div>
+    </section>
+	<script>
+		function phosClick(){
+			document.getElementById('viewPhos').style.textDecoration = 'underline'
+			document.getElementById('viewSodium').style.textDecoration = 'none'
+			document.getElementById('viewProtein').style.textDecoration = 'none'
+			document.getElementById('viewWater').style.textDecoration = 'none'
+			document.getElementById('viewK').style.textDecoration = 'none'
+
+			document.getElementById('PhosDiv').classList.remove('hiddenForm')
+			document.getElementById('SodiumDiv').classList.add('hiddenForm')
+			document.getElementById('ProteinDiv').classList.add('hiddenForm')
+			document.getElementById('WaterDiv').classList.add('hiddenForm')
+			document.getElementById('KDiv').classList.add('hiddenForm')
+		}
+
+		function sodiumClick(){
+
+			document.getElementById('viewPhos').style.textDecoration = 'none'
+			document.getElementById('viewSodium').style.textDecoration = 'underline'
+			document.getElementById('viewProtein').style.textDecoration = 'none'
+			document.getElementById('viewWater').style.textDecoration = 'none'
+			document.getElementById('viewK').style.textDecoration = 'none'
+
+			document.getElementById('PhosDiv').classList.add('hiddenForm')
+			document.getElementById('SodiumDiv').classList.remove('hiddenForm')
+			document.getElementById('ProteinDiv').classList.add('hiddenForm')
+			document.getElementById('WaterDiv').classList.add('hiddenForm')
+			document.getElementById('KDiv').classList.add('hiddenForm')
+		}
+
+		function proteinClick(){
+
+			document.getElementById('viewPhos').style.textDecoration = 'none'
+			document.getElementById('viewSodium').style.textDecoration = 'none'
+			document.getElementById('viewProtein').style.textDecoration = 'underline'
+			document.getElementById('viewWater').style.textDecoration = 'none'
+			document.getElementById('viewK').style.textDecoration = 'none'
+
+			document.getElementById('PhosDiv').classList.add('hiddenForm')
+			document.getElementById('SodiumDiv').classList.add('hiddenForm')
+			document.getElementById('ProteinDiv').classList.remove('hiddenForm')
+			document.getElementById('WaterDiv').classList.add('hiddenForm')
+			document.getElementById('KDiv').classList.add('hiddenForm')
+		}
+
+		function waterClick(){
+
+			document.getElementById('viewPhos').style.textDecoration = 'none'
+			document.getElementById('viewSodium').style.textDecoration = 'none'
+			document.getElementById('viewProtein').style.textDecoration = 'none'
+			document.getElementById('viewWater').style.textDecoration = 'underline'
+			document.getElementById('viewK').style.textDecoration = 'none'
+
+			document.getElementById('PhosDiv').classList.add('hiddenForm')
+			document.getElementById('SodiumDiv').classList.add('hiddenForm')
+			document.getElementById('ProteinDiv').classList.add('hiddenForm')
+			document.getElementById('WaterDiv').classList.remove('hiddenForm')
+			document.getElementById('KDiv').classList.add('hiddenForm')
+		}
+
+		function kClick(){
+
+			document.getElementById('viewPhos').style.textDecoration = 'none'
+			document.getElementById('viewSodium').style.textDecoration = 'none'
+			document.getElementById('viewProtein').style.textDecoration = 'none'
+			document.getElementById('viewWater').style.textDecoration = 'none'
+			document.getElementById('viewK').style.textDecoration = 'underline'
+
+			document.getElementById('PhosDiv').classList.add('hiddenForm')
+			document.getElementById('SodiumDiv').classList.add('hiddenForm')
+			document.getElementById('ProteinDiv').classList.add('hiddenForm')
+			document.getElementById('WaterDiv').classList.add('hiddenForm')
+			document.getElementById('KDiv').classList.remove('hiddenForm')
+		}
+
+	</script>
+{% endblock %}

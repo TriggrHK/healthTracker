@@ -1,0 +1,242 @@
+{% extends 'base.html' %}
+{% comment %} 
+Authors: Trevor Heath, Olivia Morgan, Spencer Jacklin, Mitch McCoard
+Description: Login html has two forms (one always stays hidden)
+    where a user can login or they can create a new account. If created an account they will be forced
+    to login with it immediately after
+{% endcomment %}
+
+{% load static %}
+
+{% block navBar%}
+<li class="nav-item"><a href="{% url 'index' %}" class="nav-link">Home</a></li>
+<li class="nav-item active"><a href="{% url 'index' %}" class="nav-link">Login/Create Account</a></li>
+
+{% endblock%}
+
+{% block content %}
+
+  <section class="ftco-section bg-light">
+      <div class="container">
+        <span style="font-size: 150%;"><span id="loginOption" style="cursor: pointer; text-decoration: underline" onclick="loginClick()">Login</span> | <span id="createOption"  style="cursor: pointer; text-decoration: none" onclick="createClick()">Create Account</span></span>
+        
+          <div class="row justify-content-center">
+            
+                  <div class="col-md-12">
+                      <div class="wrapper">
+                          <div class="row no-gutters">
+                              <div class="col-lg-8 col-md-7 order-md-last d-flex align-items-stretch">
+                                  <div class="contact-wrap w-100 p-md-5 p-4">
+                                      <h3 class="mb-4">Enter Your Info</h3>
+
+                                      <form method="POST" id="loginForm" name="contactForm" class="contactForm" action='/login/login'>
+                                        {% csrf_token %}
+                                          <div class="row">
+                                              <div class="col-md-6">
+                                                  <div class="form-group">
+                                                      <label class="label" for="username">Username: </label>
+                                                      <input type="text" class="form-control" name="username" id="loginUsername" placeholder="Enter your Username">
+                                                  </div>
+                                              </div>
+                                              <div class="col-md-6"> 
+                                                  <div class="form-group">
+                                                      <label class="label" for="password">Password: </label>
+                                                      <input type="password" class="form-control" name="password" id="loginPassword" placeholder="Enter your password">
+                                                  </div>
+                                              </div>
+                                        {% for error in errors %}
+                                            <p>{{error}}</p>
+                                        {% endfor %}
+                                              <div class="col-md-12">
+                                                  <div class="form-group">
+                                                      <input type="submit" value="Login" class="btn btn-primary">
+                                                      <div class="submitting"></div>
+                                                  </div>
+                                              </div>
+                                          </div>
+                                      </form>
+
+
+                                      <form method="POST" id="createForm" name="contactForm" class="contactForm hiddenForm" action='/login/createAccount'>
+                                        {% csrf_token %}
+                                          <div class="row">
+                                              <div class="col-md-6">
+                                                  <div class="form-group">
+                                                      <label class="label" for="firstName">First Name: </label>
+                                                      <input type="text" class="form-control" name="firstName" id="firstName" placeholder="Enter your first name">
+                                                  </div>
+                                              </div>
+                                              <div class="col-md-6"> 
+                                                  <div class="form-group">
+                                                      <label class="label" for="middleName">Middle Name: </label>
+                                                      <input type="text" class="form-control" name="middleName" id="middleName" placeholder="Enter your middle name">
+                                                  </div>
+                                              </div>
+                                              <div class="col-md-6">
+                                                  <div class="form-group">
+                                                      <label class="label" for="lastName">Last Name: </label>
+                                                      <input type="text" class="form-control" name="lastName" id="lastName" placeholder="Enter your last name">
+                                                  </div>
+                                              </div>
+                                              <div class="col-md-6">
+                                                  <div class="form-group">
+                                                      <label class="label" for="phone">Phone: </label>
+                                                      <input type="text" class="form-control" id="phone" placeholder="Enter your phone" name="phone">
+                                                  </div>
+                                              </div>
+                                              <div class="col-md-6">
+                                                <div class="form-group">
+                                                    <label class="label" for="email">Email: </label>
+                                                    <input type="text" class="form-control" name="email" id="email" placeholder="Enter your email">
+                                                </div>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <div class="form-group">
+                                                    <label class="label" for="dob">Date of Birth: </label>
+                                                    <input type="date" class="form-control" name="dob" id="dob" placeholder="Date of Birth">
+                                                </div>
+                                            </div>
+                                            
+                                              <div class="col-md-6">
+                                                <div class="form-group">
+                                                    <label class="label">Gender: </label><br/>
+                                                    <input type="radio" id="male" name="sex" value="M" checked>
+                                                    <label class="label" for="male">Male</label><br/>
+                                                    <input type="radio" id="female" name="sex" value="F">
+                                                    <label class="label" for="female">Female</label>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-6"> 
+                                                <div class="form-group">
+                                                    <label class="label" for="email">Address: </label>
+                                                    <input type="text" class="form-control" name="address" id="address" placeholder="Enter your address">
+                                                </div>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <div class="form-group">
+                                                    <label class="label" for="township">Township: </label>
+                                                    <input type="text" name="township" class="form-control" id="township" placeholder="Enter your township">
+                                                </div>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <div class="form-group">
+                                                    <label class="label" for="state">State: </label>
+                                                    <input type="text" class="form-control" name="state" id="state" placeholder="Enter your state">
+                                                </div>
+                                            </div>
+                                            <div class="col-md-6"> 
+                                                <div class="form-group">
+                                                    <label class="label" for="zip">Zip: </label>
+                                                    <input type="text" class="form-control" name="zip" id="zip" placeholder="Enter your zipcode">
+                                                </div>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <div class="form-group">
+                                                    <label class="label" for="County">County: </label>
+                                                    <input type="text" class="form-control" name="county" id="county" placeholder="Enter your county">
+                                                </div>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <div class="form-group">
+                                                    <label class="label" for="username">Username: </label>
+                                                    <input type="text" name="username" class="form-control" id="username" placeholder="Enter your username">
+                                                </div>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <div class="form-group">
+                                                    <label class="label" for="password">Password: </label>
+                                                    <input type="password" class="form-control" name="password" id="password" placeholder="Enter your password">
+                                                </div>
+                                            </div>
+                                            <div class="col-md-6"> 
+                                                <div class="form-group">
+                                                    <label class="label" for="password2">Verify Password: </label>
+                                                    <input type="password" class="form-control" name="password2" id="password2" placeholder="Verify password">
+                                                </div>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <div class="form-group">
+                                                    <label class="label" for="current_stage">Current Stage (1-5):</label>
+                                                    <input type="number" class="form-control" name="current_stage" id="current_stage" placeholder="Enter your current stage" max=5 min=1>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <div class="form-group">
+                                                    <label class="label" for="current_height">Current Height (cm):</label>
+                                                    <input type="number" name="current_height" class="form-control" id="current_height" placeholder="Enter your current height" max=120 min=0>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <div class="form-group">
+                                                    <label class="label" for="current_weight">Current Weight (kg):</label>
+                                                    <input type="number" name="current_weight" class="form-control" id="current_weight" placeholder="Enter your current Weight" max=1000 min=0>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <div class="form-group">
+                                                    <label class="label" for="race">Race: </label>
+                                                    <input type="text" name="race" class="form-control" id="race" placeholder="Enter your race">
+                                                </div>
+                                            </div>
+                                              <div class="col-md-12">
+                                                  <div class="form-group">
+                                                      <input type="submit" value="Create Account" class="btn btn-primary">
+                                                      <div class="submitting"></div>
+                                                  </div>
+                                              </div>
+                                          </div>
+                                      </form>
+                                  </div>
+                              </div>
+                              <div class="col-lg-4 col-md-5 d-flex align-items-stretch">
+                                  <div class="info-wrap bg-primary w-100 p-md-5 p-4">
+                                      <h3>How's it going?</h3>
+                                      <p class="mb-4">Contact us with any questions or problems you encounter</p>
+                              <div class="dbox w-100 d-flex align-items-start">
+                                  <div class="icon d-flex align-items-center justify-content-center">
+                                      <span class="fa fa-map-marker"></span>
+                                  </div>
+                                  <div class="text pl-3">
+                                  <p><span>Address:</span> TNRB, Brigham Young University, Provo, UT 84602</p>
+                                </div>
+                            </div>
+                              <div class="dbox w-100 d-flex align-items-center">
+                                  <div class="icon d-flex align-items-center justify-content-center">
+                                      <span class="fa fa-phone"></span>
+                                  </div>
+                                  <div class="text pl-3">
+                                  <p><span>Phone:</span> <a href="tel://1234567920">+ 1234 5678 90</a></p>
+                                </div>
+                            </div>
+                              <div class="dbox w-100 d-flex align-items-center">
+                                  <div class="icon d-flex align-items-center justify-content-center">
+                                      <span class="fa fa-paper-plane"></span>
+                                  </div>
+                                  <div class="text pl-3">
+                                  <p><span>Email:</span> <a href="mailto:info@yoursite.com">pineapple@revive.com</a></p>
+                                </div>
+                            </div>
+                        </div>
+                              </div>
+                          </div>
+                      </div>
+                  </div>
+              </div>
+      </div>
+  </section>
+  <script>
+    function loginClick(){
+        document.getElementById('loginOption').style.textDecoration = 'underline'
+        document.getElementById('createOption').style.textDecoration = 'none'
+        document.getElementById('loginForm').classList.remove('hiddenForm')
+        document.getElementById('createForm').classList.add('hiddenForm')
+    }
+    
+    function createClick(){
+        document.getElementById('createOption').style.textDecoration = 'underline'
+        document.getElementById('loginOption').style.textDecoration = 'none'
+        document.getElementById('loginForm').classList.add('hiddenForm')
+        document.getElementById('createForm').classList.remove('hiddenForm')
+    }
+    </script>
+{% endblock %}

@@ -1,0 +1,203 @@
+{% extends 'base.html' %}
+{% comment %} 
+Authors: Trevor Heath, Olivia Morgan, Spencer Jacklin, Mitch McCoard
+Description: Journal page has a view (not implemented) of journal_entries and can add new journal
+    entries along with the food consumed in the meal
+{% endcomment %}
+
+{% load static %}
+{% block navBar%}
+<li class="nav-item"><a href="{% url 'index' %}" class="nav-link">Home</a></li>
+<li class="nav-item active"><a href="{% url 'journal' %}" class="nav-link" {% if session.isAuth is False %}hidden{% endif %}>Journal</a></li>
+<li class="nav-item"><a href="{% url 'stats' %}" class="nav-link" {% if session.isAuth is False %}hidden{% endif %}>Dashboard</a></li>
+<li class="nav-item"><a href="{% url 'recommendation' %}" class="nav-link" {% if session.isAuth is False %}hidden{% endif %}>Recommendations</a></li>
+<li class="nav-item"><a href="{% url 'account' %}" class="nav-link" {% if session.isAuth is False %}hidden{% endif %}>Account</a></li>
+<li class="nav-item"><a href="{% url 'login' %}" class="nav-link"{% if session.isAuth is True %}hidden{% endif %}>Login/Create Account</a></li>
+<li class="nav-item"><a href="{% url 'logout' %}" class="nav-link"{% if session.isAuth is False %}hidden{% endif %}>Logout</a></li>
+{% endblock%}
+
+{% block content %}
+<section class="ftco-section bg-light" onload = "viewClick()" id="printablearea">
+      <div class="container">
+        <span style="font-size: 150%"><span id="viewOption" style="cursor: pointer; text-decoration: underline;" onclick="viewClick()" >View Journal</span> | <span id="addOption" style="cursor: pointer; text-decoration: none;" onclick="addClick()">Add Meal</span></span>
+
+          <div class="row justify-content-center" >
+            
+                  <div class="col-md-12 contactForm hiddenForm" id="addMeal"  action='/journal/addMeal/'>
+                      <div class="wrapper">
+                          <div class="row no-gutters">
+                              <div class="col-lg-8 col-md-7 order-md-last d-flex align-items-stretch" >
+                                  <div class="contact-wrap w-100 p-md-5 p-4">
+                                      <h3 class="mb-4">Enter Your Daily Food Intake</h3>
+                                            <form method="POST" id="addForm" name="addForm" action='/addJournal'>
+                                            {% csrf_token %}
+                                                <div class="row" id="TextBoxContainer">
+                                                    <div class="col-md-12">
+                                                        <label class="label" for="mealType">What meal would you like to enter?</label>
+                                                        <select name="mealType" id="mealType" class="form-control">
+                                                        <option value="select">Select Option</option>
+                                                        <option value="Breakfast">Breakfast</option>
+                                                        <option value="Lunch">Lunch</option>
+                                                        <option value="Dinner">Dinner</option>
+                                                        <option value="Snack">Snack</option>
+                                                        
+                                                    </select>
+                                                    </div>
+                                                    <div class="col-md-12">
+                                                        <div class="form-group">
+                                                            <label class="label" for="note">Do you have a meal note to add?</label>
+                                                            <input type="text" class="form-control" id="note" placeholder="Note" name="note">
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-6">
+                                                        <div class="form-group">
+                                                            <label class="label" for="newitem">What did you eat?</label>
+                                                            <select name="newitem" id="newitem" class="form-control">
+                                                                {% for item in food %}
+                                                                    <option value="{{item.food_name}}">{{item.food_name}}</option>
+                                                                {% endfor %}
+                                                            </select>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-6">
+                                                        <div class="form-group">
+                                                            <label class="label" for="quantity">How many servings did you eat?</label>
+                                                            <input type="number" class="form-control" id="quantity" placeholder="Servings" name="quantity" required>
+                                                        </div>
+                                                    </div>
+                                                
+                                                    <asp:Button ID="btnPost" Text="Post" OnClick="Post" />
+                                                    </form>
+                                                    <script type="text/javascript">
+                                                        itemCount = 0;
+
+                                                        function GetDynamicTextBox1(){
+                                                            itemCount+=1;
+                                                            return  '<div class="form-group"><select name="newitem'+itemCount+'" id="newitem" class="form-control">{% for item in food %}<option value="{{item.food_name}}">{{item.food_name}}</option>{% endfor %}</div>'
+                                                        }
+                                                        function GetDynamicTextBox2(){
+                                                            return  '<div class="form-group"><input type="number" name="quantity'+itemCount+'"class="form-control" id="quantity" placeholder="Servings"></div>'
+                                                        }
+                                                        
+                                                        function AddTextBox() {
+                                                            var div = document.createElement('DIV');
+                                                            div.classList.add('col-md-6');
+                                                            div.innerHTML = GetDynamicTextBox1();
+                                                            document.getElementById("TextBoxContainer").appendChild(div);
+                                                            var div2 = document.createElement('DIV');
+                                                            div2.classList.add('col-md-6');
+                                                            div2.innerHTML = GetDynamicTextBox2();
+                                                            document.getElementById("TextBoxContainer").appendChild(div2);
+                                                        }
+
+                                                        function RecreateDynamicTextboxes() {
+                                                            var values = eval('<%=Values%>');
+                                                            if (values != null) {
+                                                                var html = "";
+                                                                for (var i = 0; i < values.length; i++) {
+                                                                    html += GetDynamicTextBox(values[i]);
+                                                                }
+                                                                document.getElementById("TextBoxContainer").innerHTML = html;
+                                                            }
+                                                        }
+                                                        window.onload = RecreateDynamicTextboxes;
+
+
+                                                    function viewClick(){
+                                                        document.getElementById('viewOption').style.textDecoration = 'underline'
+                                                        document.getElementById('addOption').style.textDecoration = 'none'
+                                                        document.getElementById('viewLog').classList.remove('hiddenForm')
+                                                        document.getElementById('addMeal').classList.add('hiddenForm')
+                                                    }
+
+                                                    function addClick(){
+                                                        document.getElementById('addOption').style.textDecoration = 'underline'
+                                                        document.getElementById('viewOption').style.textDecoration = 'none'
+                                                        document.getElementById('viewLog').classList.add('hiddenForm')
+                                                        document.getElementById('addMeal').classList.remove('hiddenForm')
+                                                    }
+
+                                                        </script>
+                                                </div><div class="col-md-12">
+                                                        <div class="form-group">
+                                                            <input type="submit" id="btnAdd" value="Add another item to this meal" class="btn btn-primary" onclick="AddTextBox()">
+                                                            <div class="submitting"></div>
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="col-md-12">
+                                                        <div class="form-group">
+                                                            <input type="submit" value="Submit" class="btn btn-primary" form="addForm">
+                                                            <div class="submitting"></div>
+                                                        </div>
+                                                    </div>
+                                                </form>
+                                            </div>
+                                        </div>
+                                    </div>
+                                            </div>
+                                    </div>
+                                    </div>
+ <div class="row justify-content-center" >
+
+            <div class="col-md-12 contactForm" id="viewLog" action='/journal/viewLog/'>
+                <div class="wrapper">
+                    <div class="row no-gutters">
+                        <div class="col-lg-8 col-md-7 order-md-last d-flex align-items-stretch">
+                            <div class="contact-wrap w-100 p-md-5 p-4">
+                                <h3 class="mb-4">Your Meal Journal</h3>
+                                <table >
+                                    <thead>
+                                    <tr>
+                                        <th>Date</th>
+                                        <th>Time</th>
+                                        <th>Meal Name</th>
+                                        <th>Food Name</th>
+                                        <th>Quantity</th>
+                                        <th>Notes</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                        <tr>
+                                            <td style="text-align: center;">11/29/2022</td>
+                                            <td style="text-align: center;">4:00pm</td>
+                                            <td style="text-align: center;">Dinner</td>
+                                            <td style="text-align: center;">Roast Beef</td>
+                                            <td style="text-align: center;">1</td>
+                                            <td style="text-align: center;">fastsunday</td>
+                                        </tr>
+                                        <tr>
+                                            <td style="text-align: center;">11/30/2022</td>
+                                            <td style="text-align: center;">8:00am</td>
+                                            <td style="text-align: center;">Breakfast</td>
+                                            <td style="text-align: center;">Banana</td>
+                                            <td style="text-align: center;">1</td>
+                                            <td style="text-align: center;">Unripened</td>
+                                        </tr>
+                                        <tr>
+                                            <td style="text-align: center;">11/30/2022</td>
+                                            <td style="text-align: center;">12:00pm</td>
+                                            <td style="text-align: center;">Lunch</td>
+                                            <td style="text-align: center;">Orange</td>
+                                            <td style="text-align: center;">2</td>
+                                            <td style="text-align: center;">Cuties > Halos</td>
+                                        </tr>
+                                        <tr>
+                                            <td style="text-align: center;">11/30/2022</td>
+                                            <td style="text-align: center;">3:00pm</td>
+                                            <td style="text-align: center;">Snack</td>
+                                            <td style="text-align: center;">Apple</td>
+                                            <td style="text-align: center;">1</td>
+                                            <td style="text-align: center;">Honeycrisp</td>
+                                        </tr>
+                                </tbody>
+                            </table>
+                                                                  
+                                                              </div>
+                                                      </div>
+                                                      </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                                      </section>
+{% endblock %}
